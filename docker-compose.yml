@@ -1,0 +1,40 @@
+version: '1'
+
+services: 
+  backend:
+    build:
+      context: ./servidor
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - mariadb
+    networks:
+      - reddocker
+      
+  mariadb:
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysecretpassword
+      - MYSQL_USER=root
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data:/var/lib/mysql
+    networks:
+      - reddocker
+
+  mongodb:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=mysecretpassword
+    ports:
+      - 27017:27017
+    networks:
+      - reddocker
+
+networks:
+  reddocker:
+    external:
+      name: reddocker
